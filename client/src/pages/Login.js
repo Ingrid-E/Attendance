@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import '../App.css'
 import { post } from '../api/client'
-import {useNavigate, useParams} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 
 
 function Login(){
@@ -30,12 +30,8 @@ function Login(){
     async function fetchUser(login) {
         try{
             const response = await post(`/login`, login)
-            setState({
-                ...state,
-                type: response
-            })
-            navigate('/home',state)
-
+            state.type = response
+            navigate('/home',{state: state})
         }catch(error){
             //console.log(error)
             if(error.response.status === 404){

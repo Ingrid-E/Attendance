@@ -1,0 +1,9 @@
+label {
+    display: flex;
+    flex-direction: column;
+    margin: 2vh 10px;
+}
+
+button {
+    margin: 2vh 10px;
+}
