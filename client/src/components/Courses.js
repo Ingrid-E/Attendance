@@ -25,7 +25,7 @@ function Editable() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const crear = await post(`/course`, state);
+      await post(`/course`, state);
       setAlert("Creado");
     } catch (error) {
       console.log("Error: ", error);
@@ -121,10 +121,53 @@ function Editable() {
 }
 
 function ShowCourses() {
+  //let {teachers, campuses} = useRef([])
+  let teachers = useRef({})
+  let campuses = useRef({})
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    getCampuses();
+    getProfessors();
+    getCourses();
+    console.log(campuses,teachers)
+  }, []);
+
+  async function getProfessors() {
+    try {
+      const response = await get("/professors");
+      response.forEach((element) => {
+        teachers.current[element.code] = element.name
+      });
+      console.log(teachers)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function getCampuses() {
+    try {
+      const response = await get("/campuses");
+      response.forEach((element) => {
+        campuses.current[element.code] = element.name
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function getCourses() {
+    try {
+      setData(await get("/courses"));
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   const columns = [
     {
       title: "Code",
       field: "code",
+      type: "numeric"
     },
     {
       title: "Name",
@@ -138,26 +181,16 @@ function ShowCourses() {
     {
       title: "Professor",
       field: "code_professor",
+      lookup:teachers
 
     },
     {
       title: "Campus",
       field: "id_campus",
+      lookup: campuses
     },
   ];
-  const [data, setData] = useState([]);
 
-  useEffect(() => {
-    getCourses();
-  }, []);
-
-  async function getCourses() {
-    try {
-      setData(await get("/courses"));
-    } catch (error) {
-      console.error(error);
-    }
-  }
 
   function deleteCourse(code){
     swal({
