@@ -2,43 +2,6 @@ var express = require('express')
 var router = express.Router()
 var client = require('../bd')
 
-router.get('/users/:username', async function(req,res){
-  const {username} = req.params
-  try{
-    const response = await client.query(`SELECT * FROM users WHERE username = $1`, [username])
-    if(response.rowCount == 0) res.status(404).send('No existe')
-    else res.status(200).json(response.rows[0])
-  }catch(error){
-    console.error(error)
-    res.status(500).json(error)
-  }
-});
-
-router.get('/campuses', async (req,res)=>{
-  try{
-    const response = await client.query(`SELECT * FROM campus`)
-    return res.status(200).json(response.rows)
-  }catch(error){
-    res.status(500).json(error)
-  }
-
-})
-
-router.get('/professors', async (req,res)=>{
-  try{
-    const response = await client.query(`SELECT name,code
-    FROM professors p
-    INNER JOIN staff s
-    ON p.id_staff=s.id
-    INNER JOIN users u
-    ON s.id_user=u.id;`)
-    return res.status(200).json(response.rows)
-  }catch(error){
-    res.status(500).json(error)
-  }
-})
-
-
 router.post('/login', async(req,res)=>{
   let username = req.body.username;
   let password = req.body.password;
@@ -67,15 +30,5 @@ router.post('/login', async(req,res)=>{
   }
 
 })
-
-
-
-
-
-/* GET home page. */
-router.get('/users', async function(req, res, next) {
-  const response = await client.query('SELECT * FROM users')
-  res.status(200).json(response.rows);
-});
 
 module.exports = router;

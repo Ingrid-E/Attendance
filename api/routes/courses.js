@@ -11,13 +11,13 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/enrolled/:student", async (req, res) => {
-    const {student} = req.params
+router.get("/enrolled/:code", async (req, res) => {
+    const {code} = req.params
     try {
-      const response = await client.query(`SELECT code_course FROM enrolled WHERE code_student = ${student}`);
-      return res.status(200).json(response.rows);
+      const response = await client.query(`SELECT * FROM enrolled WHERE code_student = $1 or code_course = $1`,[code]);
+      return res.status(200).json(response);
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json({error: error});
     }
   });
 

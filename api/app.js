@@ -7,8 +7,12 @@ var cors = require("cors");
 var indexRouter = require('./routes/index');
 var coursesRouter = require('./routes/courses');
 var studentsRouter = require('./routes/students');
+var professorsRouter = require('./routes/professors');
+var campusesRouter = require('./routes/campuses');
+var staffRouter = require('./routes/staff')
+var assistanceRouter = require('./routes/assistance')
+var adminRouter = require('./routes/administrators')
 var usersRouter = require('./routes/users');
-var testAPIRouter = require("./routes/testAPI");
 
 var app = express();
 
@@ -27,7 +31,11 @@ app.use('/', indexRouter);
 app.use('/courses', coursesRouter)
 app.use('/students', studentsRouter)
 app.use('/users', usersRouter);
-app.use("/testAPI", testAPIRouter);
+app.use('/staff', staffRouter);
+app.use('/admin', adminRouter);
+app.use('/assistance', assistanceRouter);
+app.use('/campuses', campusesRouter);
+app.use('/professors', professorsRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
