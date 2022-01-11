@@ -7,3 +7,12 @@ label {
 button {
     margin: 2vh 10px;
 }
+
+.table{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.MuiPaper-root {
+    width: 95%;
+}

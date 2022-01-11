@@ -6,43 +6,20 @@ import "./components.css";
 import swal from 'sweetalert'
 
 
-function EditableCourses() {
+function EditableStudents() {
   //let {teachers, campuses} = useRef([])
   let teachers = useRef({null: "Sin Confirmar"})
   let campuses = useRef({null: "Sin Confirmar"})
   const [data, setData] = useState([]);
   useEffect(() => {
-    getCampuses();
-    getProfessors();
-    getCourses();
+    getStudents();
     console.log(data)
   }, []);
 
-  async function getProfessors() {
-    try {
-      const response = await get("/professors");
-      response.forEach((element) => {
-        teachers.current[element.code] = element.name
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
-  async function getCampuses() {
+  async function getStudents() {
     try {
-      const response = await get("/campuses");
-      response.forEach((element) => {
-        campuses.current[element.id] = element.name + " " + element.location
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async function getCourses() {
-    try {
-      setData(await get("/courses"));
+      setData(await get("/students"));
     } catch (error) {
       console.error(error);
     }
@@ -50,34 +27,31 @@ function EditableCourses() {
 
   const columns = [
     {
-      title: "Code",
+      title: "Identificación",
+      field: "id",
+      type: "numeric"
+    },
+    {
+      title: "Codigo Estudiantil",
       field: "code",
       type: "numeric"
     },
     {
-      title: "Name",
+      title: "Nombre",
       field: "name",
     },
     {
-      title: "Credits",
-      field: "credits",
-      type: "numeric"
+      title: "Dirección",
+      field: "address",
     },
     {
-      title: "Professor",
-      field: "code_professor",
-      lookup:teachers.current
-
-    },
-    {
-      title: "Campus",
-      field: "id_campus",
-      lookup: campuses.current
-    },
+      title: "Contraseña",
+      field: "password"
+    }
   ];
 
 
-  function deleteCourse(code){
+  function deleteStudent(code){
     swal({
         title:"Eliminar Curso",
         text: "Estas seguro que quieres eliminar el curso?",
@@ -86,12 +60,12 @@ function EditableCourses() {
     }).then(async response =>{
             if(response){
                 try{
-                    await del(`/courses/${code}`)
+                    await del(`/students/${code}`)
                     swal({
-                        text:"Curso Eliminado",
+                        text:"Estudiante Eliminado",
                         icon: "success"
                     })
-                    getCourses();
+                    getStudents();
                 }catch(error){
                     swal({
                         text:"Error eliminando",
@@ -105,22 +79,16 @@ function EditableCourses() {
     )
   }
 
-  const updateCourse = async (data) =>{
-    console.log("Updating Course")
+  const updateStudent = async (data, code) =>{
+    console.log(code)
     try{
-      if(data.code_professor === 'null'){
-        delete data.code_professor
-      }
-      if(data.id_campus === 'null'){
-        delete data.id_campus
-      }
-      await put(`/courses/${data.code}`, data)
+      await put(`/students/${code}`, data)
       swal({
-        text:"Curso Actualizado",
+        text:"Estudiante Actualizado",
         icon: "success"
     })
 
-      getCourses();
+      getStudents();
   }catch(error){
     swal({
       text:"Error Actualizando",
@@ -130,24 +98,18 @@ function EditableCourses() {
   }
   }
 
-  const addCourse = async (data) => {
+  const addStudent = async (data) => {
     try {
-      if(data.code_professor === 'null'){
-        delete data.code_professor
-      }
-      if(data.id_campus === 'null'){
-        delete data.id_campus
-      }
       console.log(data)
-      await post(`/courses`, data);
-      getCourses();
+      await post(`/students`, data);
+      getStudents();
       swal({
-        text:"Curso Agregado",
+        text:"Estudiante Agregado",
         icon: "success"
     })
     } catch (error) {
       swal({
-        text:"Error Agregando Curso",
+        text:"Error Agregando Estudiante",
         icon: "error"
     })
       if (error.response.status === 409) {
@@ -165,23 +127,23 @@ function EditableCourses() {
       <MaterialTable
         columns={columns}
         data={data}
-        title="Cursos"
+        title="Estudiantes"
         actions={[
           {
             icon: "delete",
             tooltip: "Delete User",
-            onClick: (event, rowData) =>deleteCourse(rowData.code)
+            onClick: (event, rowData) =>deleteStudent(rowData.code)
           }
         ]}
         editable={{
             onRowAdd:(newRow) => new Promise((resolve, reject)=>{
               console.log(newRow)
-              addCourse(newRow)
+              addStudent(newRow)
               resolve()
             }),
             onRowUpdate:(newRow, oldRow)=> new Promise((resolve, reject)=>{
               console.log("New Row", newRow)
-              updateCourse(newRow)
+              updateStudent(newRow, oldRow.code)
               resolve()
 
             })
@@ -198,4 +160,4 @@ function EditableCourses() {
   );
 }
 
-export default EditableCourses;
+export default EditableStudents;

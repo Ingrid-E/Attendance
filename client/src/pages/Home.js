@@ -1,17 +1,26 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import '../App.css'
 import { get } from '../api/client'
 import {useLocation} from 'react-router-dom'
-import {Editable, ShowCourses} from '../components/Courses'
+import EditableCourses from '../components/Courses'
+import EditableStudents from '../components/Students'
+import TakeAssistance from '../components/Attendance'
 
-function Home({navigation, route}){
+function Home(){
     console.log(useLocation().state)
     const {username,type} = useLocation().state
-    let [state, setState] = useState(userInfo)
-
+    let [state, setState] = useState({})
+    let [student, setCode] = useState()
+    useEffect(() =>{
+        userInfo()
+    }, [])
     async function userInfo(){
         try{
             const response = await get(`/users/${username}`)
+            if(type === "student"){
+                setCode("hola")
+                console.log("CODIGO: ", student)
+            }
             setState({
                 id: response.id,
                 name: response.name,
@@ -32,8 +41,13 @@ function Home({navigation, route}){
         <div>
             <h1> Bienvenido {state.name}</h1>
             {(type === 'admin')? (<div>
-            <ShowCourses></ShowCourses>
-            <Editable></Editable>
+            <EditableCourses/>
+            <br></br>
+            <EditableStudents/>
+            </div>):''}
+            {(type === 'student')? (<div>
+            <TakeAssistance
+            student_code={student}/>
             </div>):''}
         </div>
     )

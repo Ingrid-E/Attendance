@@ -57,4 +57,25 @@ export async function del(endpoint) {
 
 }
 
+export async function put(endpoint,data) {
+  console.log("Calling Put")
+  const response = await fetch(baseUrl + endpoint, {
+    method: "PUT",
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  });
+  if (!response.ok) {
+      // make the promise be rejected if we didn't get a 2xx response
+      const err = new Error("Not 2xx response");
+      err.response = response;
+      throw err;
+  } else {
+      return await response.json();
+  }
+
+}
+
 
