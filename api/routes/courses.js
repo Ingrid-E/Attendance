@@ -14,8 +14,22 @@ router.get("/", async (req, res) => {
 router.get("/enrolled/:code", async (req, res) => {
     const {code} = req.params
     try {
-      const response = await client.query(`SELECT * FROM enrolled WHERE code_student = $1 or code_course = $1`,[code]);
-      return res.status(200).json(response);
+      const response = await client.query(`
+      SELECT
+      e.id, e.code_student, e.code_course,
+      u.name AS name_student,
+      c.name AS name_course
+      FROM enrolled e
+      INNER JOIN students s
+        ON e.code_student = s.code
+      INNER JOIN courses c
+        ON e.code_course = c.code
+      INNER JOIN users u
+        ON s.id_user = u.id
+      WHERE e.code_student = $1
+            or e.code_course = $1`
+      ,[code]);
+      return res.status(200).json(response.rows);
     } catch (error) {
       res.status(500).json({error: error});
     }

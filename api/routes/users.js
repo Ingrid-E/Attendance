@@ -19,7 +19,7 @@ router.get("/:username", async (req, res) => {
     );
     if (response.rowCount == 0)
       return res.status(404).json({ error: "No existe" });
-    return res.status(200).json(response.rows);
+    return res.status(200).json(response.rows[0]);
   } catch (error) {
     res.status(500).json(error);
   }

@@ -14,9 +14,9 @@ router.get("/", async (req, res) => {
   router.get('/:student', async function(req,res){
     const {student} = req.params
     try{
-      const response = await client.query(`SELECT code FROM students WHERE id_user = $1`, [student])
+      const response = await client.query(`SELECT * FROM students WHERE id_user = $1 or code=$1`, [student])
       if(response.rowCount == 0) res.status(404).send('No existe')
-      else res.status(200).json(response)
+      else res.status(200).json(response.rows[0])
     }catch(error){
       res.status(500).json(error)
     }

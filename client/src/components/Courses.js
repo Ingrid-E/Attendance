@@ -1,5 +1,4 @@
 import React, { Component, useEffect, useRef, useState } from "react";
-import Select from "react-select";
 import MaterialTable from "material-table";
 import { get, post,del, put} from "../api/client";
 import "./components.css";
@@ -15,7 +14,6 @@ function EditableCourses() {
     getCampuses();
     getProfessors();
     getCourses();
-    console.log(data)
   }, []);
 
   async function getProfessors() {
@@ -25,7 +23,7 @@ function EditableCourses() {
         teachers.current[element.code] = element.name
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 
@@ -36,7 +34,7 @@ function EditableCourses() {
         campuses.current[element.id] = element.name + " " + element.location
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 
@@ -106,7 +104,6 @@ function EditableCourses() {
   }
 
   const updateCourse = async (data) =>{
-    console.log("Updating Course")
     try{
       if(data.code_professor === 'null'){
         delete data.code_professor
@@ -138,7 +135,7 @@ function EditableCourses() {
       if(data.id_campus === 'null'){
         delete data.id_campus
       }
-      console.log(data)
+
       await post(`/courses`, data);
       getCourses();
       swal({
@@ -157,7 +154,7 @@ function EditableCourses() {
   };
 
   return (
-    <div class="table">
+    <div className="table">
       <link
         rel="stylesheet"
         href="https://fonts.googleapis.com/icon?family=Material+Icons"
@@ -175,12 +172,10 @@ function EditableCourses() {
         ]}
         editable={{
             onRowAdd:(newRow) => new Promise((resolve, reject)=>{
-              console.log(newRow)
               addCourse(newRow)
               resolve()
             }),
             onRowUpdate:(newRow, oldRow)=> new Promise((resolve, reject)=>{
-              console.log("New Row", newRow)
               updateCourse(newRow)
               resolve()
 

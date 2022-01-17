@@ -7,7 +7,7 @@ router.get("/", async (req, res) => {
       const response = await client.query(`
         SELECT
         c.id, c.name, c.location, c.id_administrator,
-        u.name, u.id AS id_admin
+        u.name AS name_admin, u.id AS id_admin
         FROM campus c
         INNER JOIN administrators a
             ON c.id_administrator = a.id

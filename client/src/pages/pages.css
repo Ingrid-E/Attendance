@@ -1,0 +1,140 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family:'Poppins', sans-serif;
+}
+
+.logo {
+    width: 3vw;
+    margin: 10px;
+    position: absolute;
+}
+
+/*------------LogIn CSS-------------*/
+.LogIn {
+    display: flex;
+}
+
+.leftSide {
+    width: 40vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+}
+
+.rightSide {
+    width: 60vw;
+    background-image: url(./img/Univalle.jpg);
+    background-size:cover;
+}
+
+/*------------Home CSS-------------*/
+
+.Home {
+    display: flex;
+}
+
+.tables {
+    width: 100%;
+    background-color: #EEEEEE;
+}
+
+
+.side-bar {
+    width: 20vw;
+    background-color: #ff1e38;
+    height: 100vmax;
+    color: white;
+    padding-top: 30px;
+}
+
+.side-bar ul li {
+    display: flex;
+    margin-bottom: 20px;
+    margin-left: 1vw;
+}
+
+.user {
+    margin-bottom: 50px!important;
+}
+li:not(:first-child)::before{
+    content: '';
+    width: 0px;
+    background-color: white;
+    margin-right: .5vw;
+    transition: 0.2s;
+    -webkit-transition: 0.2s;
+    -moz-transition: 0.2s;
+    -ms-transition: 0.2s;
+    -o-transition: 0.2s;
+}
+
+.active {
+    width: 2px;
+    background-color: white;
+}
+
+li:not(:first-child):hover::before{
+    width: 2px;
+}
+
+li .icon {
+    width: 30px;
+}
+
+li p {
+    margin-left: 1.5vw;
+    font-size: 1rem;
+}
+
+
+
+/*------------Form CSS-------------*/
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+    margin: 0 auto;
+}
+
+form .button {
+    background-color: #cd1f32;
+    color: white;
+    align-self: flex-end;
+}
+
+form .button:hover {
+    background-color: #ff1e38;
+}
+
+
+
+/*------------Text CSS-------------*/
+
+.title {
+    color: #2C4252;
+    width: fit-content;
+}
+
+.error-text {
+    color: #cd1f32;
+}
+
+/*------------Material Design-------------*/
+
+.MuiFormControl-root{
+    width: 70%!important;
+
+}
+.MuiFormControl-root {
+    color: #2C4252;
+    margin: 3vh 0!important;
+    width: 100%;
+}
+
+.MuiPaper-root {
+    margin: 5vh 6vw;
+}

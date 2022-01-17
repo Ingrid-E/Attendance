@@ -1,5 +1,4 @@
 import React, { Component, useEffect, useRef, useState } from "react";
-import Select from "react-select";
 import MaterialTable from "material-table";
 import { get, post,del, put} from "../api/client";
 import "./components.css";
@@ -54,7 +53,7 @@ function EditableStudents() {
   function deleteStudent(code){
     swal({
         title:"Eliminar Curso",
-        text: "Estas seguro que quieres eliminar el curso?",
+        text: "Estas seguro que quieres eliminar este estudiante?",
         icon: "warning",
         buttons: ["Cancelar", "Eliminar"]
     }).then(async response =>{

@@ -1,54 +1,87 @@
-import React, { useEffect, useRef, useState } from 'react'
-import '../App.css'
+import React, { useEffect,useRef,useState } from 'react'
+import "./pages.css";
 import { get } from '../api/client'
 import {useLocation} from 'react-router-dom'
+
+
 import EditableCourses from '../components/Courses'
 import EditableStudents from '../components/Students'
 import TakeAssistance from '../components/Attendance'
 
+
+import WorkIcon from '@mui/icons-material/Work';
+import SchoolIcon from '@mui/icons-material/School';
+import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
+import CoPresentIcon from '@mui/icons-material/CoPresent';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+
+
 function Home(){
-    console.log(useLocation().state)
     const {username,type} = useLocation().state
-    let [state, setState] = useState({})
-    let [student, setCode] = useState()
+    const [user, setUser] = useState([])
+    const [student, setStudent] = useState([])
+    const [visibility, setVisibility] = useState('')
+
     useEffect(() =>{
-        userInfo()
+        getUser()
     }, [])
-    async function userInfo(){
+
+    async function getUser(){
         try{
-            const response = await get(`/users/${username}`)
-            if(type === "student"){
-                setCode("hola")
-                console.log("CODIGO: ", student)
+            const userInfo = await get(`/users/${username}`)
+            setUser(userInfo)
+            if(type === 'student'){
+                const studentInfo = await get(`/students/${userInfo.id}`)
+                setStudent(studentInfo)
             }
-            setState({
-                id: response.id,
-                name: response.name,
-                address: response.address,
-            })
         }catch(error){
             if(error.response.status === 404){
-                //setState({error: "No existe el usuario"})
-                console.log("No existe el usuario")
+                console.error("No existe el usuario")
             }else if(error.response.status === 500){
-                //setState({error: "INTERNAL ERROR SERVER"})
                 console.error("Error")
             }
         }
     }
 
+    function show(content){
+        if(visibility === content){
+            setVisibility('')
+        }else{
+            setVisibility(content)
+        }
+    }
+
     return (
-        <div>
-            <h1> Bienvenido {state.name}</h1>
-            {(type === 'admin')? (<div>
-            <EditableCourses/>
-            <br></br>
-            <EditableStudents/>
-            </div>):''}
-            {(type === 'student')? (<div>
-            <TakeAssistance
-            student_code={student}/>
-            </div>):''}
+        <div className='Home'>
+            <div className="side-bar">
+                <ul>
+                    <li className='user'>
+                    <AccountCircleIcon className='icon'></AccountCircleIcon>
+                    <p>{user.name !== undefined? user.name.split(' ')[0]:'empty'} </p>
+                    </li>
+                    <li className={visibility === 'courses'? 'active':''} onClick={()=>show('courses')}>{type === 'admin'}
+                    <SchoolIcon className='icon'></SchoolIcon>
+                    <p>Cursos</p>
+                    </li>
+                    <li>{type === 'admin'}
+                    <WorkIcon className='icon'></WorkIcon>
+                    <p>Personal</p>
+                    </li>
+                    <li className={visibility === 'students'? 'active':''} onClick={()=>show('students')}>{type === 'admin'}
+                    <EmojiPeopleIcon className='icon'></EmojiPeopleIcon>
+                    <p>Estudiantes</p>
+                    </li>
+                    <li>{type === 'admin'}
+                    <CoPresentIcon className='icon'></CoPresentIcon>
+                    <p>Profesores</p>
+                    </li>
+                </ul>
+            </div>
+            <div className='tables'>
+                {visibility === 'courses'? <EditableCourses/>:null}
+                {visibility === 'students'? <EditableStudents/>:null}
+            </div>
+
         </div>
     )
 }
