@@ -1,12 +1,10 @@
-import React, { useEffect,useRef,useState } from 'react'
+import React, { useEffect,useState } from 'react'
 import "./pages.css";
 import { get } from '../api/client'
 import {useLocation} from 'react-router-dom'
 
-
 import EditableCourses from '../components/Courses'
 import EditableStudents from '../components/Students'
-import TakeAssistance from '../components/Attendance'
 
 
 import WorkIcon from '@mui/icons-material/Work';

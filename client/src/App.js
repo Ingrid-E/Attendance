@@ -6,12 +6,6 @@ import './App.css';
 
 function App(){
 
-  const [state, setState] = useState({
-    loggedInStatus: "NOT_LOGGED_IN",
-    user: {}
-  })
-
-
     return(
       <div className="App">
       <Router>

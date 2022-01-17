@@ -1,5 +1,4 @@
 import React, {useEffect, useRef, useState } from "react"
-import swal from 'sweetalert'
 import MaterialTable from "material-table"
 import { get, post } from '../api/client'
 

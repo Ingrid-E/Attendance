@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useRef, useState } from "react";
+import React, {useEffect, useState } from "react";
 import MaterialTable from "material-table";
 import { get, post,del, put} from "../api/client";
 import "./components.css";
@@ -7,8 +7,7 @@ import swal from 'sweetalert'
 
 function EditableStudents() {
   //let {teachers, campuses} = useRef([])
-  let teachers = useRef({null: "Sin Confirmar"})
-  let campuses = useRef({null: "Sin Confirmar"})
+
   const [data, setData] = useState([]);
   useEffect(() => {
     getStudents();

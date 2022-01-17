@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useRef, useState } from "react";
+import React, {useEffect, useRef, useState } from "react";
 import MaterialTable from "material-table";
 import { get, post,del, put} from "../api/client";
 import "./components.css";
