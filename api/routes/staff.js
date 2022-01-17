@@ -87,6 +87,8 @@ router.get("/", async (req, res) => {
 
   router.put("/:staff&:user", async(req, res) => {
     const { staff, user} = req.params;
+    console.log(staff, user)
+    console.log(req.body)
     let {id, name, address, password,
         id_staff, salary, eps, arl, id_campus} = req.body;
     try {
@@ -109,12 +111,13 @@ router.get("/", async (req, res) => {
         eps = $3,
         arl = $4,
         id_campus = $5
-        WHERE id = $7
+        WHERE id = $6
         `,
       [id_staff,salary, eps, arl, id_campus, staff]
     );
       return res.status(200).json({message: "Staff Updated"});
     } catch (error) {
+      console.log(error)
       return res.status(500).send(error);
     }
   });

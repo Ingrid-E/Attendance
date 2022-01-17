@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState } from "react";
+import React, {useEffect,useRef, useState } from "react";
 import MaterialTable from "material-table";
 import { get, post,del, put} from "../api/client";
 import "./components.css";
@@ -6,23 +6,23 @@ import swal from 'sweetalert'
 import AddIcon from '@mui/icons-material/Add';
 
 
-function EditableCourses() {
+
+function Staff() {
   //let {teachers, campuses} = useRef([])
-  let teachers = useRef({null: "Sin Confirmar"})
-  let campuses = useRef({null: "Sin Confirmar"})
+
   const [data, setData] = useState([]);
+  let campuses = useRef({})
+
   useEffect(() => {
     getCampuses();
-    getProfessors();
-    getCourses();
+    getStaff();
+    console.log(data)
   }, []);
 
-  async function getProfessors() {
+
+  async function getStaff() {
     try {
-      const response = await get("/professors");
-      response.forEach((element) => {
-        teachers.current[element.code] = element.name
-      });
+      setData(await get("/staff"));
     } catch (error) {
       console.error(error);
     }
@@ -39,62 +39,62 @@ function EditableCourses() {
     }
   }
 
-  async function getCourses() {
-    try {
-      setData(await get("/courses"));
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
   const columns = [
     {
-      title: "Code",
-      field: "code",
+      title: "Identificación",
+      field: "id",
       type: "numeric"
     },
     {
-      title: "Name",
+      title: "Nombre",
       field: "name",
     },
     {
-      title: "Credits",
-      field: "credits",
-      type: "numeric",
-      textAlign: 'center'
+      title: "Dirección",
+      field: "address",
     },
     {
-      title: "Professor",
-      field: "code_professor",
-      lookup:teachers.current
-
+      title: "Salario",
+      field: "salary",
     },
     {
-      title: "Campus",
+      title: "EPS",
+      field: "eps",
+    },
+    {
+      title: "ARL",
+      field: "arl",
+    },
+    {
+      title: "Sede",
       field: "id_campus",
       lookup: campuses.current
     },
+    {
+      title: "Contraseña",
+      field: "password"
+    }
   ];
 
 
-  function deleteCourse(code){
+  function deleteStaff(id){
     swal({
         title:"Eliminar Curso",
-        text: "Estas seguro que quieres eliminar el curso?",
+        text: "Estas seguro que quieres eliminar este personal?",
         icon: "warning",
         buttons: ["Cancelar", "Eliminar"]
     }).then(async response =>{
             if(response){
                 try{
-                    await del(`/courses/${code}`)
+                    await del(`/users/${id}`)
                     swal({
-                        text:"Curso Eliminado",
+                        text:"Personal Eliminado",
                         icon: "success"
                     })
-                    getCourses();
+                    getStaff();
                 }catch(error){
                     swal({
-                        text:"Error eliminando",
+                        text:"Error Eliminando",
                         icon: "error"
                     })
                     console.error(error)
@@ -105,21 +105,17 @@ function EditableCourses() {
     )
   }
 
-  const updateCourse = async (data) =>{
+  const updateStaff = async (data, id) =>{
+   
     try{
-      if(data.code_professor === 'null'){
-        delete data.code_professor
-      }
-      if(data.id_campus === 'null'){
-        delete data.id_campus
-      }
-      await put(`/courses/${data.code}`, data)
+      console.log(data)
+      await put(`/staff/${id.staff}&${id.user}`, data)
       swal({
-        text:"Curso Actualizado",
+        text:"Personal Actualizado",
         icon: "success"
     })
 
-      getCourses();
+      getStaff();
   }catch(error){
     swal({
       text:"Error Actualizando",
@@ -129,24 +125,18 @@ function EditableCourses() {
   }
   }
 
-  const addCourse = async (data) => {
+  const addStaff = async (data) => {
     try {
-      if(data.code_professor === 'null'){
-        delete data.code_professor
-      }
-      if(data.id_campus === 'null'){
-        delete data.id_campus
-      }
-
-      await post(`/courses`, data);
-      getCourses();
+      console.log(data)
+      await post(`/staff`, data);
+      getStaff();
       swal({
-        text:"Curso Agregado",
+        text:"Personal Agregado",
         icon: "success"
     })
     } catch (error) {
       swal({
-        text:"Error Agregando Curso",
+        text:"Error Agregando",
         icon: "error"
     })
       if (error.response.status === 409) {
@@ -156,7 +146,7 @@ function EditableCourses() {
   };
 
   return (
-    <div className="table courses">
+    <div class="table staff">
       <link
         rel="stylesheet"
         href="https://fonts.googleapis.com/icon?family=Material+Icons"
@@ -164,21 +154,23 @@ function EditableCourses() {
       <MaterialTable
         columns={columns}
         data={data}
-        title="Cursos"
+        title="Personal"
         actions={[
           {
             icon: "delete",
             tooltip: "Delete User",
-            onClick: (event, rowData) =>deleteCourse(rowData.code)
+            onClick: (event, rowData) =>deleteStaff(rowData.id)
           }
         ]}
         editable={{
             onRowAdd:(newRow) => new Promise((resolve, reject)=>{
-              addCourse(newRow)
+              console.log(newRow)
+              addStaff(newRow)
               resolve()
             }),
             onRowUpdate:(newRow, oldRow)=> new Promise((resolve, reject)=>{
-              updateCourse(newRow)
+              console.log("Old Row", newRow)
+              updateStaff(newRow, {user: oldRow.id, staff: oldRow.id_staff})
               resolve()
 
             })
@@ -189,12 +181,13 @@ function EditableCourses() {
         options={{
           actionsColumnIndex: -1,
           addRowPosition: "first",
-          cellStyle: {textAlign:'left'},
-          headerStyle: {textAlign:'left', 'flex-direction': 'row'},
+          cellStyle: {textAlign:'center'},
+          headerStyle: {textAlign:'center'}
+
         }}
       />
     </div>
   );
 }
 
-export default EditableCourses;
+export default Staff;

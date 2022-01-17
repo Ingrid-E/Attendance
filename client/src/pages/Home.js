@@ -5,7 +5,7 @@ import {useLocation} from 'react-router-dom'
 
 import EditableCourses from '../components/Courses'
 import EditableStudents from '../components/Students'
-
+import Staff from '../components/Staff'
 
 import WorkIcon from '@mui/icons-material/Work';
 import SchoolIcon from '@mui/icons-material/School';
@@ -61,7 +61,7 @@ function Home(){
                     <SchoolIcon className='icon'></SchoolIcon>
                     <p>Cursos</p>
                     </li>
-                    <li>{type === 'admin'}
+                    <li className={visibility === 'staff'? 'active':''} onClick={()=>show('staff')}>{type === 'admin'}
                     <WorkIcon className='icon'></WorkIcon>
                     <p>Personal</p>
                     </li>
@@ -78,6 +78,7 @@ function Home(){
             <div className='tables'>
                 {visibility === 'courses'? <EditableCourses/>:null}
                 {visibility === 'students'? <EditableStudents/>:null}
+                {visibility === 'staff'? <Staff/>:null}
             </div>
 
         </div>

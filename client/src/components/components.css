@@ -1,9 +1,140 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family:'Poppins', sans-serif;
+}
+
+h1 {
+    margin: 4vh 0;
+    color: #455a64;
+}
 
 .table{
     width: 100%;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
+
+.add-button {
+    border: none;
+    border-radius: 30px;
+    padding: 0.5vh 1vw;
+    display: flex;
+    align-items: center;
+    background-color: #ff1e38;
+    color: white;
+    -webkit-border-radius: 30px;
+    -moz-border-radius: 30px;
+    -ms-border-radius: 30px;
+    -o-border-radius: 30px;
+}
+
+.add-button:hover {
+    background-color: #cd1f32;
+}
+
+.add-button .MuiSvgIcon-root {
+    width: 0.7em;
+}
+
 .MuiPaper-root {
-    width: 95%;
+    width: 100%;
+    margin: 0 6vw;
 }
+.MuiTableCell-head {
+    color: #455a64!important;
+    font-weight: 600!important;
+    align-items: center;
+}
+
+.MuiToolbar-root  .MuiIconButton-root:hover {
+    background-color: white!important;
+}
+
+.MuiToolbar-root {
+    padding-left: 1vw!important;
+}
+
+.MuiPaper-elevation2 {
+    box-shadow: none!important;
+}
+
+
+.MuiTypography-h6 {
+    font-size: 2rem!important;
+    font-family:'Poppins', sans-serif!important;
+    color: #2C4252!important;
+}
+
+.MuiToolbar-root  .MuiTextField-root {
+    width: 30%!important;
+    margin-right: auto!important;
+}
+.MTableToolbar-spacer-7 {
+    flex: none!important;
+}
+
+.MTableToolbar-spacer-21 {
+    flex: none!important;
+
+}
+
+.MuiInputBase-root {
+    background-color: #eee;
+    border-radius: 30px;
+    padding: 0 10px;
+    -webkit-border-radius: 30px;
+    -moz-border-radius: 30px;
+    -ms-border-radius: 30px;
+    -o-border-radius: 30px;
+}
+.MuiTextField-root {
+    float: left!important;
+    width: 100%!important;
+}
+
+
+.MuiInput-underline:before{
+    content: none!important;
+}
+.MuiIcon-root {
+    color: #969697;
+    margin-left: 5px;
+}
+
+.Mui-focused .MuiIcon-root{
+    color: #2C4252;
+    transition: 100ms ease-in-out;
+    -webkit-transition: 100ms ease-in-out;
+    -moz-transition: 100ms ease-in-out;
+    -ms-transition: 100ms ease-in-out;
+    -o-transition: 100ms ease-in-out;
+}
+
+.MuiInput-underline:after {
+    content: none!important;
+}
+
+
+.courses .MuiTableCell-root:nth-child(3){
+    width: fit-content!important;
+}
+
+
+.courses .MuiTableCell-root:nth-child(3) .MuiButtonBase-root{
+    margin-left: 30px;
+}
+.courses .MuiTableCell-body:nth-child(3){
+    text-align: center!important;
+}
+
+.Component-paginationToolbar-2{
+    width: 0!important;
+}
+.MuiTablePagination-root:last-child {
+    padding: none!important
+}
+

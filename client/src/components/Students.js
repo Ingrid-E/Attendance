@@ -3,6 +3,8 @@ import MaterialTable from "material-table";
 import { get, post,del, put} from "../api/client";
 import "./components.css";
 import swal from 'sweetalert'
+import AddIcon from '@mui/icons-material/Add';
+
 
 
 function EditableStudents() {
@@ -144,7 +146,10 @@ function EditableStudents() {
               updateStudent(newRow, oldRow.code)
               resolve()
 
-            })
+            }),
+        }}
+        icons= {{
+          Add: ()=> <button class="add-button"><AddIcon></AddIcon>Agregar</button>
         }}
         options={{
           actionsColumnIndex: -1,

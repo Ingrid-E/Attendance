@@ -38,12 +38,11 @@
 
 .tables {
     width: 100%;
-    background-color: #EEEEEE;
+    margin: 5vh auto;
 }
 
-
 .side-bar {
-    width: 20vw;
+    min-width: 20vw;
     background-color: #ff1e38;
     height: 100vmax;
     color: white;
@@ -101,13 +100,13 @@ form {
 }
 
 form .button {
-    background-color: #cd1f32;
+    background-color: #ff1e38;
     color: white;
     align-self: flex-end;
 }
 
 form .button:hover {
-    background-color: #ff1e38;
+    background-color: #cd1f32;
 }
 
 
@@ -133,8 +132,4 @@ form .button:hover {
     color: #2C4252;
     margin: 3vh 0!important;
     width: 100%;
-}
-
-.MuiPaper-root {
-    margin: 5vh 6vw;
 }
