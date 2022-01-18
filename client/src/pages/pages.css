@@ -58,6 +58,10 @@
 .user {
     margin-bottom: 50px!important;
 }
+.exit {
+    margin-left: auto;
+    margin-right: 1vw;
+}
 li:not(:first-child)::before{
     content: '';
     width: 0px;

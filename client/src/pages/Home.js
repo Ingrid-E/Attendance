@@ -2,24 +2,29 @@ import React, { useEffect,useState } from 'react'
 import "./pages.css";
 import { get } from '../api/client'
 import {useLocation} from 'react-router-dom'
+import {useNavigate} from "react-router-dom";
 
 import EditableCourses from '../components/Courses'
 import EditableStudents from '../components/Students'
 import Staff from '../components/Staff'
+import Professors from '../components/Professors'
+import TakeAssistance from '../components/Attendance'
 
 import WorkIcon from '@mui/icons-material/Work';
 import SchoolIcon from '@mui/icons-material/School';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import CoPresentIcon from '@mui/icons-material/CoPresent';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 
 function Home(){
-    const {username,type} = useLocation().state
+    let {username,type} = useLocation().state
+    console.log(username,type)
     const [user, setUser] = useState([])
     const [student, setStudent] = useState([])
     const [visibility, setVisibility] = useState('')
-
+    const navigate = useNavigate();
     useEffect(() =>{
         getUser()
     }, [])
@@ -54,10 +59,13 @@ function Home(){
             <div className="side-bar">
                 <ul>
                     <li className='user'>
-                    <AccountCircleIcon className='icon'></AccountCircleIcon>
+                    <AccountCircleIcon className='icon'/>
                     <p>{user.name !== undefined? user.name.split(' ')[0]:'empty'} </p>
+                    <ExitToAppIcon onClick = {()=>{navigate('/', {replace: true})}
+                        } className='exit'/>
                     </li>
-                    <li className={visibility === 'courses'? 'active':''} onClick={()=>show('courses')}>{type === 'admin'}
+                    {type === 'admin'? <div>
+                    <li className={visibility === 'courses'? 'active':''} onClick={()=>show('courses')}>
                     <SchoolIcon className='icon'></SchoolIcon>
                     <p>Cursos</p>
                     </li>
@@ -69,16 +77,27 @@ function Home(){
                     <EmojiPeopleIcon className='icon'></EmojiPeopleIcon>
                     <p>Estudiantes</p>
                     </li>
-                    <li>{type === 'admin'}
+                    <li className={visibility === 'professors'? 'active':''} onClick={()=>show('professors')} >{type === 'admin'}
                     <CoPresentIcon className='icon'></CoPresentIcon>
                     <p>Profesores</p>
+                    </li></div>: null
+                    }
+                    {type === 'student'? <div>
+                    <li className={visibility === 'student-assistance'? 'active':''} onClick={()=>show('student-assistance')}>
+                    <SchoolIcon className='icon'></SchoolIcon>
+                    <p>Asistencia</p>
                     </li>
+                    </div>: null}
+
+
                 </ul>
             </div>
             <div className='tables'>
                 {visibility === 'courses'? <EditableCourses/>:null}
                 {visibility === 'students'? <EditableStudents/>:null}
                 {visibility === 'staff'? <Staff/>:null}
+                {visibility === 'professors'? <Professors/>: null}
+                {visibility === 'student-assistance'? <TakeAssistance/>: null}
             </div>
 
         </div>

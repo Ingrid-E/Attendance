@@ -1,20 +1,24 @@
 import React, { useState} from "react";
 import "../App.css";
 import { post } from "../api/client";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { TextField, InputAdornment, Button } from "@material-ui/core";
 import { AccountCircle, VpnKey } from "@material-ui/icons";
 import "./pages.css";
 import Logo from './img/Logo_Univalle.png'
 
 function Login() {
+
+
   let [state, setState] = useState({
     username: "ini",
     password: "ini",
     type: "",
     error: ""
   });
+  console.log(state)
   const navigate = useNavigate();
+
   const handleChange = function (e) {
     setState({
       ...state,

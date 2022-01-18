@@ -44,29 +44,20 @@ router.get('/:id', async function(req,res){
   });
 
   router.post("/", async (req, res) => {
-    let {id, name, address, password, code,
-    salary, eps, arl, id_campus,
-    } = req.body;
+    let {code, id_staff} = req.body;
     try {
-       await client.query(
-        `INSERT INTO users(id, name, address, username, password) VALUES ($1, $2, $3, $4, $5)`,
-        [id, name, address, code, password]
-      )
-      await client.query(
-        `INSERT INTO staff(salary, eps, arl, id_campus, id_user)
-        VALUES ($1, $2, $3, $4, $5)`,
-        [salary, eps, arl, id_campus, id]
-      )
-      const staffID = await client.query(`SELECT id FROM staff WHERE id_user = ${id}`)
-      await client.query(
+        await client.query(
           `INSERT INTO professors(code, id_staff)
           VALUES($1, $2)`,
-          [code, staffID]
+          [code, id_staff]
       )
       res.status(201).json({message: "Created Professor"});
     } catch (error) {
-        console.log(error)
-        return res.status(500).json({error: "Error Creating Professor"});
+        if(error.code === '23505'){
+          return res.status(409).json({error: "Professor already exists"});
+        }else{
+          return res.status(500).json({error: "Error Creating Professor"});
+        }
     }
   });
 
@@ -74,49 +65,24 @@ router.get('/:id', async function(req,res){
   router.delete("/:code", async (req, res) => {
     const { code } = req.params;
     try {
-      const staffID = await client.query("SELECT id_staff FROM professors WHERE code=$1", [code]);
-      const userID = await client.query("SELECT id_user FROM staff WHERE id=$1", [staffID]);
-      await client.query("DELETE FROM users WHERE id=$1", [userID]);
+      await client.query("DELETE FROM professors WHERE code=$1", [code]);
       return res.status(200).json({ message: "Deleted Staff" });
     } catch (error) {
       return res.status(500).send(error);
     }
   });
 
-  router.put("/:professor&:staff&:user", async(req, res) => {
-    const { professor, staff, user} = req.params;
-    let {id, name, code, address, password,
-        id_staff, salary, eps, arl, id_campus} = req.body;
+  router.put("/:professor", async(req, res) => {
+    const {professor} = req.params;
+    let {code, id_staff} = req.body;
     try {
-      await client.query(
-          `
-          UPDATE users
-                    SET id = $1,
-                    name = $2,
-                    username = $3,
-                    address = $4,
-                    password= $5
-                    WHERE id = $6
-          `,
-        [id, name, code, address,password, user]
-      );
-      await client.query(
-        `UPDATE staff
-        SET id = $1,
-        salary = $2,
-        eps = $3,
-        arl = $4,
-        id_campus = $5
-        WHERE id = $7
-        `,
-      [id_staff,salary, eps, arl, id_campus, staff])
-
       await client.query(
         `UPDATE professors
         SET code = $1,
-        WHERE code = $7
+        id_staff = $2
+        WHERE code = $3
         `,
-      [code, professor]
+      [code, id_staff, professor]
 
     )
       return res.status(200).json({message: "Professor Updated"});
