@@ -23,11 +23,10 @@ router.get("/", async (req, res) => {
 
 router.get('/:id', async function(req,res){
     const {id} = req.params
+    console.log(id)
     try{
       const response = await client.query(`
       SELECT
-          u.id, u.name, u.address, u.username, u.password,
-          s.salary, s.eps, s.arl, s.id_campus,
           p.code, p.id_staff
       FROM professors p
       INNER JOIN staff s
@@ -37,8 +36,9 @@ router.get('/:id', async function(req,res){
       WHERE p.id_staff = $1 or p.code = $1 or s.id_user = $1
     `, [id]);
       if(response.rowCount == 0) res.status(404).send('No existe')
-      else res.status(200).json(response)
+      else res.status(200).json(response.rows[0])
     }catch(error){
+      console.log(error)
       res.status(500).json(error)
     }
   });

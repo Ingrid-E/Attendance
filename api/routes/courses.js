@@ -35,6 +35,42 @@ router.get("/enrolled/:code", async (req, res) => {
     }
   });
 
+
+
+  router.post("/enrolled", async (req, res) => {
+    const {code, code_course} = req.body
+    console.log(code, code_course)
+    try {
+      const response = await client.query(`
+        INSERT INTO enrolled (code_student, code_course)
+        VALUES($1, $2)
+        `
+      ,[code, code_course]);
+      res.status(201).json(response);
+    } catch (error) {
+      if (error.code === "23505") {
+        return res.status(409).json("Already exists");
+      } else {
+        return res.status(500).json(error);
+      }
+    }
+  });
+
+  router.get('/assigned/:code', async(req, res)=>{
+    const {code} = req.params
+    try{
+      const response = await client.query(`
+      SELECT
+      *
+      FROM courses c
+      WHERE c.code_professor = $1
+      `, [code])
+      return res.status(200).json(response.rows);
+    }catch(error){
+      return res.status(500).json(error)
+    }
+  });
+
 router.post("/", async (req, res) => {
   let { code, name, credits, id_campus, code_professor } = req.body;
   try {
