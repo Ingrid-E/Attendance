@@ -35,16 +35,15 @@ router.get('/:id', async function(req,res){
       const response = await client.query(`
       SELECT
         a.id,
-        a.code_course, c.name AS name_course,
+        a.code_course,
         a.id_staff, a.code_student,
         a.time
         FROM assistance a
-        INNER JOIN courses c
+        LEFT OUTER JOIN courses c
             ON a.code_course = c.code
         WHERE a.id = $1 or  a.code_course= $1 or a.code_student = $1 or a.id_staff = $1
         `, [id])
-      if(response.rowCount == 0) res.status(404).send('No existe')
-      else return res.status(200).json(response.rows)
+      return res.status(200).json(response.rows)
     }catch(error){
       res.status(500).json(error)
     }
@@ -52,6 +51,7 @@ router.get('/:id', async function(req,res){
 
 router.post('/', async(req,res)=>{
     const {time, code_course, code_student, id_staff} = req.body
+    console.log(time, code_course, id_staff)
     try{
         await client.query(`
         INSERT INTO assistance(time, code_course, code_student, id_staff)
@@ -59,7 +59,8 @@ router.post('/', async(req,res)=>{
         `, [time, code_course, code_student, id_staff])
         return res.status(200).json({message:"CREATED"})
     }catch(error){
-        return res.status(500).json({error: error});
+      console.log(error)
+        return res.status(500).json(error);
     }
 })
 

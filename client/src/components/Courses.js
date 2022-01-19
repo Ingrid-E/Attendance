@@ -6,7 +6,7 @@ import swal from 'sweetalert'
 import AddIcon from '@mui/icons-material/Add';
 
 
-function EditableCourses() {
+function Courses() {
   //let {teachers, campuses} = useRef([])
   let teachers = useRef({null: "Sin Confirmar"})
   let campuses = useRef({null: "Sin Confirmar"})
@@ -197,4 +197,4 @@ function EditableCourses() {
   );
 }
 
-export default EditableCourses;
+export default Courses;

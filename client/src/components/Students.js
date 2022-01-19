@@ -7,8 +7,7 @@ import AddIcon from '@mui/icons-material/Add';
 
 
 
-function EditableStudents() {
-  //let {teachers, campuses} = useRef([])
+function Students() {
 
   const [data, setData] = useState([]);
   useEffect(() => {
@@ -163,4 +162,4 @@ function EditableStudents() {
   );
 }
 
-export default EditableStudents;
+export default Students;

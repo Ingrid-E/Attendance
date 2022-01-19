@@ -1,27 +1,26 @@
 import React, {useEffect, useRef, useState } from "react"
 import MaterialTable from "material-table"
-import { get, post } from '../api/client'
+import { get, post,del } from '../api/client'
 import "./components.css";
 import swal from 'sweetalert'
 import AddIcon from '@mui/icons-material/Add';
 
 
 function Enroll({code_course}){
-  console.log(code_course)
+    console.log(code_course)
     const [students, setStudents] = useState([])
     let all = useRef([])
     useEffect(()=>{
       getAllStudents()
       getEnrolled()
-    }, [])
+    }, [code_course])
 
     async function getAllStudents() {
       try {
         const response = await get("/students");
         response.forEach((element) => {
-          all.current[element.code] = element.code
+          all.current[element.code] = element.code + " " + element.name
         });
-        console.log("STUDENTS ", response)
       } catch (error) {
         console.error(error);
       }
@@ -30,13 +29,7 @@ function Enroll({code_course}){
       async function getEnrolled(){
         try {
             const response = await get(`/courses/enrolled/${code_course}`)
-            let list = []
-            console.log(response)
-            response.forEach(async (enrollment)=>{
-              const student = await get(`/students/${enrollment.code_student}`)
-              list.push(student)
-            })
-            setStudents(list)
+            setStudents(response)
 
         } catch (error) {
           console.error(error);
@@ -45,20 +38,47 @@ function Enroll({code_course}){
 
       const enrollStudent = async(data) => {
         data['code_course'] = code_course
-        console.log(data)
         try {
           await post('/courses/enrolled', data);
-          console.log(data)
+          getEnrolled()
         } catch (error) {
           console.error(error)
         }
       };
 
+      function deleteStudent(code){
+        swal({
+            title:"Eliminar Estudiante",
+            text: "Estas seguro que quieres eliminar este estudiante?",
+            icon: "warning",
+            buttons: ["Cancelar", "Eliminar"]
+        }).then(async response =>{
+                if(response){
+                    try{
+                        await del(`/courses/enrolled/${code}`)
+                        swal({
+                            text:"Estudiante Eliminado",
+                            icon: "success"
+                        })
+                        getEnrolled();
+                    }catch(error){
+                        swal({
+                            text:"Error Eliminando",
+                            icon: "error"
+                        })
+                        console.error(error)
+                    }
+                }
+            }
+        )
+      }
+
+
     const columns = [
         {
           title: "Codigo",
-          field: "code",
-          //lookup: all.current
+          field: "code_student",
+          lookup: all.current
         }
       ];
 
@@ -71,23 +91,18 @@ function Enroll({code_course}){
           <MaterialTable
           columns={columns}
           data={students}
-          title="Asistencia"
+          title="Matriculados"
           actions={[
             {
               icon: "delete",
               tooltip: "Delete User",
-              onClick: (event, rowData) =>console.log("delete")
+              onClick: (event, rowData) =>deleteStudent(rowData.code_student)
             }
           ]}
           editable={{
               onRowAdd:(newRow) => new Promise((resolve, reject)=>{
                 console.log(newRow)
                 enrollStudent(newRow)
-                resolve()
-              }),
-              onRowUpdate:(newRow, oldRow)=> new Promise((resolve, reject)=>{
-                console.log("Old Row", newRow)
-                console.log("update")
                 resolve()
               })
           }}

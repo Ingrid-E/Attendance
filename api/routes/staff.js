@@ -47,7 +47,7 @@ router.get("/", async (req, res) => {
         WHERE staff.id_user = $1 or staff.id = $1
         `, [id])
       if(response.rowCount == 0) res.status(404).send('No existe')
-      else res.status(200).json(response)
+      else res.status(200).json(response.rows[0])
     }catch(error){
       res.status(500).json(error)
     }

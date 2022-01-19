@@ -1,7 +1,7 @@
 import React, { useState} from "react";
 import "../App.css";
 import { post } from "../api/client";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import { TextField, InputAdornment, Button } from "@material-ui/core";
 import { AccountCircle, VpnKey } from "@material-ui/icons";
 import "./pages.css";

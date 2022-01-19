@@ -8,7 +8,6 @@ import AddIcon from '@mui/icons-material/Add';
 
 
 function Staff() {
-  //let {teachers, campuses} = useRef([])
 
   const [data, setData] = useState([]);
   let campuses = useRef({})

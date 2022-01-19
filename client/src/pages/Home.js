@@ -4,11 +4,11 @@ import { get } from "../api/client";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
-import EditableCourses from "../components/Courses";
-import EditableStudents from "../components/Students";
+import Courses from "../components/Courses";
+import Students from "../components/Students";
 import Staff from "../components/Staff";
 import Professors from "../components/Professors";
-import TakeAssistance from "../components/Attendance";
+import Attendance from "../components/Attendance";
 import Enroll from '../components/Enroll'
 import WorkIcon from "@mui/icons-material/Work";
 import SchoolIcon from "@mui/icons-material/School";
@@ -23,6 +23,7 @@ function Home() {
   console.log(username, type);
   const [user, setUser] = useState([]);
   const [student, setStudent] = useState([]);
+  const [staff, setStaff] = useState([]);
   const [professor, setProfessor] = useState([]);
   const [visibility, setVisibility] = useState("");
   const navigate = useNavigate();
@@ -38,6 +39,12 @@ function Home() {
         const studentInfo = await get(`/students/${userInfo.id}`);
         setStudent(studentInfo);
       }
+      if (type === "staff") {
+        const staffInfo = await get(`/staff/${userInfo.id}`);
+        console.log('Info ', staffInfo);
+        setStaff(staffInfo);
+      }
+
       if(type === "professor"){
         const professorInfo = await get(`/professors/${userInfo.id}`);
         getCourses(professorInfo)
@@ -119,11 +126,11 @@ function Home() {
             </div>
           ) : null}
 
-          {type === "student" ? (
+          {type === "student" || type === "staff"  ? (
             <div>
               <li
-                className={visibility === "student-assistance" ? "active" : ""}
-                onClick={() => show("student-assistance")}
+                className={visibility === "assistance" ? "active" : ""}
+                onClick={() => show("assistance")}
               >
                 <SchoolIcon className="icon"></SchoolIcon>
                 <p>Asistencia</p>
@@ -147,11 +154,14 @@ function Home() {
         </ul>
       </div>
       <div className="tables">
-        {visibility === "courses" ? <EditableCourses /> : null}
-        {visibility === "students" ? <EditableStudents /> : null}
+        {visibility === "courses" ? <Courses /> : null}
+        {visibility === "students" ? <Students /> : null}
         {visibility === "staff" ? <Staff /> : null}
+        {visibility === "professors" ? <Professors/> : null}
         {type === 'professor' && visibility !== '' ? <Enroll code_course={visibility}/> : null}
-        {visibility === "student-assistance" ? <TakeAssistance student_code={student.code}/> : null}
+        {visibility === "assistance" ? <Attendance id={type ==='student'? student.code: staff.id_staff} type={
+          type
+        }/> : null}
       </div>
     </div>
   );

@@ -35,17 +35,30 @@ router.get("/enrolled/:code", async (req, res) => {
     }
   });
 
+  router.delete("/enrolled/:code", async (req, res) => {
+    const {code} = req.params
+    try {
+      const response = await client.query(`
+      DELETE FROM enrolled
+      WHERE code_student = $1
+      `,[code]);
+      return res.status(200).json(response);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  });
+
 
 
   router.post("/enrolled", async (req, res) => {
-    const {code, code_course} = req.body
-    console.log(code, code_course)
+    const {code_student, code_course} = req.body
+    console.log(code_student, code_course)
     try {
       const response = await client.query(`
         INSERT INTO enrolled (code_student, code_course)
         VALUES($1, $2)
         `
-      ,[code, code_course]);
+      ,[code_student, code_course]);
       res.status(201).json(response);
     } catch (error) {
       if (error.code === "23505") {

@@ -58,11 +58,16 @@
 .user {
     margin-bottom: 50px!important;
 }
+
+.user::before{
+    content: none!important;
+}
+
 .exit {
     margin-left: auto;
     margin-right: 1vw;
 }
-li:not(:first-child)::before{
+li::before{
     content: '';
     width: 0px;
     background-color: white;
@@ -79,9 +84,10 @@ li:not(:first-child)::before{
     background-color: white;
 }
 
-li:not(:first-child):hover::before{
+li:hover::before{
     width: 2px;
 }
+
 
 li .icon {
     width: 30px;

@@ -1,24 +1,27 @@
 import React, {useEffect, useRef, useState } from "react"
 import MaterialTable from "material-table"
 import { get, post } from '../api/client'
+import AddIcon from '@mui/icons-material/Add';
 
-
-function TakeAssistance({student_code}){
-    console.log("Take asistance student code: ", student_code)
+function Attendance({id, type}){
+  console.log(id,type)
     const [attendance, setAttendance] = useState([])
-    let courses = useRef({})
+    let data = useRef({})
 
     useEffect(()=>{
+      if(type === 'student'){
         getCourses()
-        getAssistance()
+      }
+      getAssistance()
     }, [])
 
     async function getCourses() {
         try {
-          const list = await get(`/courses/enrolled/${student_code}`)
+          const list = await get(`/courses/enrolled/${id}`)
           list.forEach(course => {
-            courses.current[course.code_course] = course.name_course
+            data.current[course.code_course] = course.name_course
           });
+          setAttendance()
         } catch (error) {
           console.error(error);
         }
@@ -26,17 +29,25 @@ function TakeAssistance({student_code}){
 
       async function getAssistance(){
         try {
-          setAttendance(await get(`/assistance/${student_code}`))
+          const response = await get(`/assistance/${id}`)
+          response.forEach((assistance)=>{
+            const d = new Date(assistance.time);
+            let time = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds()
+            assistance.time = time;
+          })
+
+          setAttendance(response)
         } catch (error) {
           console.error(error);
         }
       }
-
-    const columns = [
+    let columns
+    if(type === 'student'){
+      columns = [
         {
           title: "Curso",
           field: "code_course",
-          lookup: courses.current
+          lookup: data.current
         },
         {
           title: "Tiempo",
@@ -44,6 +55,16 @@ function TakeAssistance({student_code}){
           editable: "never"
         },
       ];
+    }else{
+      columns = [
+        {
+          title: "Tiempo",
+          field: "time",
+          editable: "never"
+        },
+      ];
+    }
+
     async function takeAttendance(data){
       console.log(data)
       try{
@@ -54,7 +75,7 @@ function TakeAssistance({student_code}){
       }
     }
     return (
-        <div>
+        <div className="table">
                 <link
         rel="stylesheet"
         href="https://fonts.googleapis.com/icon?family=Material+Icons"
@@ -67,11 +88,19 @@ function TakeAssistance({student_code}){
             onRowAdd:(newRow) => new Promise((resolve, reject)=>{
               let d = new Date()
               const dateTime = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds()
-              newRow['code_student'] = student_code
+              if(type === 'student'){
+                newRow['code_student'] = id
+              }else{
+                newRow['id_staff'] = id
+              }
               newRow['time'] = dateTime
+              console.log(dateTime)
               takeAttendance(newRow)
               resolve()
             })
+          }}
+          icons= {{
+            Add: ()=> <button class="add-button"><AddIcon></AddIcon>Agregar</button>
           }}
           options={{
             actionsColumnIndex: -1,
@@ -84,4 +113,4 @@ function TakeAssistance({student_code}){
     )
 }
 
-export default TakeAssistance
+export default Attendance
